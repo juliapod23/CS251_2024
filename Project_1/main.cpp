@@ -11,7 +11,7 @@ const string ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 // Function prototypes at the top of the file for function decomposition
 
 /**
- * Print instructions for using the program.;
+ * Print instructions for using the program.;:
  */
 void printMenu();
 /**
