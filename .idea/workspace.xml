@@ -48,7 +48,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
-    "C/C++ File.main.cpp.executor": "Debug",
+    "C/C++ File.main.cpp.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
@@ -102,7 +102,7 @@
       <workItem from="1706715704646" duration="19000" />
       <workItem from="1706715983533" duration="558000" />
       <workItem from="1706718114048" duration="351000" />
-      <workItem from="1706718805538" duration="13000" />
+      <workItem from="1706718805538" duration="499000" />
     </task>
     <task id="LOCAL-00001" summary="1/29">
       <option name="closed" value="true" />

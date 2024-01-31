@@ -11,7 +11,7 @@ const string ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 // Function prototypes at the top of the file for function decomposition
 
 /**
- * Print instructions for using the program.;:
+ * Print instructions for using the program.
  */
 void printMenu();
 /**
@@ -90,11 +90,11 @@ int main() {
         getline(cin, command);
         cout << endl;
         // TODO_STUDENT: Execute non-exit commands.
-        if(command == "C"){
+        if(command == "C" || command == "c"){
             toCaesarCipher();
-        } else if(command == "D"){
+        } else if(command == "D" || command == "d"){
             fromCaesarCipher();
-        } else if(command == "V"){
+        } else if(command == "V"|| command == "v"){
             toVigenere();
         }
 
