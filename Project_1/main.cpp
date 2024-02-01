@@ -60,9 +60,9 @@ string toCaesarCipher(){
     getline(cin,shift);
     int numShift = stoi(shift);
 
-    str = rot(str,numShift);
+    string encryptedTxt = rot(str,numShift);
 
-    return str;
+    return encryptedTxt;
 }
 
 string fromCaesarCipher(){
@@ -70,7 +70,30 @@ string fromCaesarCipher(){
 }
 
 string toVigenere(){
+    cout << "Enter text to encrypt:" << endl;
+    string str;
+    getline(cin,str);
 
+    cout << "Enter the Vigenère key:" << endl;
+    string key;
+    getline(cin,key);
+
+    string fixedKey;
+    for(char& x : key){
+        if(isalpha(x)){
+            x = toupper(x);
+            fixedKey += x;
+        }
+    }
+
+    for(int i = 0; i < str.size();i++){
+        if(isalpha(str[i])){
+            str[i] = toupper(str[i]);
+            str[i] = rot(str[i], findIndexInAlphabet(fixedKey[i% fixedKey.size()]));
+        }
+
+    }
+    return str;
 }
 
 int main() {
@@ -91,11 +114,15 @@ int main() {
         cout << endl;
         // TODO_STUDENT: Execute non-exit commands.
         if(command == "C" || command == "c"){
-            toCaesarCipher();
+            string result;
+            result = toCaesarCipher();
+            cout << result << endl;
         } else if(command == "D" || command == "d"){
             fromCaesarCipher();
         } else if(command == "V"|| command == "v"){
-            toVigenere();
+            string result;
+            result = toVigenere();
+            cout << result << endl;
         }
 
         cout << endl;
@@ -126,13 +153,14 @@ int findIndexInAlphabet(char c) {
 }
 
 char rot(char c, int amount) {
-    int shiftChar = int(c);
+    int shiftChar = findIndexInAlphabet(c);
     shiftChar = (shiftChar + amount) % 26;
-    c = char(shiftChar);
+    c = ALPHABET[shiftChar];
     return c;
 }
 
 string rot(string line, int amount){
+
     for(char& x : line){
         if(isalpha(x)){
             x = toupper(x);
