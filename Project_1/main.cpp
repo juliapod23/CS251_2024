@@ -86,10 +86,19 @@ string toVigenere(){
         }
     }
 
+    int k = 0;
     for(int i = 0; i < str.size();i++){
         if(isalpha(str[i])){
             str[i] = toupper(str[i]);
-            str[i] = rot(str[i], findIndexInAlphabet(fixedKey[i% fixedKey.size()]));
+
+            if(k == fixedKey.size()){
+                k = 0;
+            }
+
+            while(k < fixedKey.size()){
+                str[i] = rot(str[i], findIndexInAlphabet(fixedKey[k]));
+            }
+            k++;
         }
 
     }
