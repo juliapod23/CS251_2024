@@ -65,9 +65,72 @@ string toCaesarCipher(){
     return encryptedTxt;
 }
 
-string fromCaesarCipher(){
+void createWords(string& curWord, string str, vector<string>& words){
+    for(char& x : str){
+        if(isalpha(x)){
+            curWord += x;
+        } else if(!curWord.empty()){
+            for(char& x : curWord){
+                x = toupper(x);
+            }
+            words.push_back(curWord);
+            curWord.clear();
+        }
+    }
 
+    if(!curWord.empty()){
+        for(char& x : curWord){
+            x = toupper(x);
+        }
+        words.push_back(curWord);
+    }
 }
+
+string fromCaesarCipher(ifstream& inputFile){
+    cout << "Enter the text to Caesar-cipher decrypt:" << endl;
+    string str;
+    getline(cin,str);
+
+    vector<string> words;
+    string curWord;
+    createWords(curWord,str,words);
+
+
+    string result;
+
+    for(int shift = 0; shift < 26; shift++){
+        int correctWords = 0;
+
+        for(string& s : words){
+            string decryptedWord;
+            for(char& x : s){
+                x = rot(x, -shift);
+                decryptedWord += x;
+            }
+            s = decryptedWord;
+
+            string line;
+            while(getline(inputFile,line)){
+                if(line.find(decryptedWord) != string::npos){
+                    correctWords++;
+                    break;
+                }
+            }
+        }
+
+        if(correctWords > words.size()/2){
+            for(string x : words){
+                result += x;
+                result += " ";
+            }
+        } else{
+            result = "No good decryptions found";
+        }
+    }
+    return result;
+}
+
+
 
 string toVigenere(){
     cout << "Enter text to encrypt:" << endl;
@@ -87,20 +150,18 @@ string toVigenere(){
     }
 
     int k = 0;
-    for(int i = 0; i < str.size();i++){
-        if(isalpha(str[i])){
-            str[i] = toupper(str[i]);
+    for(char & x : str){
+        if(isalpha(x)){
+            x = toupper(x);
 
             if(k == fixedKey.size()){
                 k = 0;
             }
 
-            while(k < fixedKey.size()){
-                str[i] = rot(str[i], findIndexInAlphabet(fixedKey[k]));
-            }
+            x = rot(x, findIndexInAlphabet(fixedKey[k]));
+
             k++;
         }
-
     }
     return str;
 }
@@ -113,6 +174,7 @@ int main() {
     cout << endl;
 
     do {
+        ifstream inputFile("dictionary.txt");
         printMenu();
         cout << endl
              << "Enter a command (case does not matter): ";
@@ -127,7 +189,9 @@ int main() {
             result = toCaesarCipher();
             cout << result << endl;
         } else if(command == "D" || command == "d"){
-            fromCaesarCipher();
+            string result;
+            result = fromCaesarCipher(inputFile);
+            cout << result << endl;
         } else if(command == "V"|| command == "v"){
             string result;
             result = toVigenere();
@@ -135,6 +199,8 @@ int main() {
         }
 
         cout << endl;
+
+        inputFile.close();
 
     } while (!(command == "x" || command == "X"));
 
@@ -176,5 +242,5 @@ string rot(string line, int amount){
             x = rot(x,amount);
         }
     }
-    return line; // change return statement?
+    return line;
 }
