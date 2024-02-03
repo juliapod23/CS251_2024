@@ -12,7 +12,6 @@
     <list default="true" id="a9421fd1-6c8a-423d-b190-a8582685a07e" name="Changes" comment="1/30">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project_1/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Project_1/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.exe" beforeDir="false" afterPath="$PROJECT_DIR$/main.exe" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +49,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
-    "C/C++ File.main.cpp.executor": "Debug",
+    "C/C++ File.main.cpp.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
@@ -106,7 +105,7 @@
       <workItem from="1706718114048" duration="351000" />
       <workItem from="1706718805538" duration="22306000" />
       <workItem from="1706804763035" duration="1061000" />
-      <workItem from="1706805916948" duration="21870000" />
+      <workItem from="1706805916948" duration="31135000" />
     </task>
     <task id="LOCAL-00001" summary="1/29">
       <option name="closed" value="true" />
@@ -207,7 +206,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Project_1/main.cpp</url>
-          <line>130</line>
+          <line>146</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
       </breakpoints>

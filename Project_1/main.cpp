@@ -86,47 +86,63 @@ void createWords(string& curWord, string str, vector<string>& words){
     }
 }
 
+string decryptText(string str, int amount){
+    for(char& x : str){
+        if(isalpha(x)){
+            x = toupper(x);
+            x = rot(x, -amount);
+        }
+    }
+    return str;
+}
+
+bool searchDictionary(string& word, vector<string>& dictionary){
+    for(string& x : dictionary){
+        if(x == word){
+            return true;
+        }
+    }
+    return false;
+}
+
 string fromCaesarCipher(ifstream& inputFile){
+    vector<string> dictionary;
+    string entry;
+    while(inputFile >> entry){
+        dictionary.push_back(entry);
+    }
+
     cout << "Enter the text to Caesar-cipher decrypt:" << endl;
     string str;
     getline(cin,str);
 
     vector<string> words;
     string curWord;
-    createWords(curWord,str,words);
 
-
-    string result;
-
+    bool correctDec = false;
     for(int shift = 0; shift < 26; shift++){
         int correctWords = 0;
 
-        for(string& s : words){
-            string decryptedWord;
-            for(char& x : s){
-                x = rot(x, -shift);
-                decryptedWord += x;
-            }
-            s = decryptedWord;
+        string result = decryptText(str,shift);
 
-            string line;
-            while(getline(inputFile,line)){
-                if(line.find(decryptedWord) != string::npos){
-                    correctWords++;
-                    break;
+        for()
+
+            if(correctWords > words.size()/2){
+                for(string x : words){
+                    correctDec = true;
                 }
+            } else{
+                result = "No good decryptions found";
             }
-        }
-
-        if(correctWords > words.size()/2){
-            for(string x : words){
-                result += x;
-                result += " ";
-            }
-        } else{
-            result = "No good decryptions found";
-        }
     }
+
+
+
+
+
+    createWords(curWord,str,words);
+
+
     return result;
 }
 
