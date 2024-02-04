@@ -49,6 +49,38 @@ char rot(char c, int amount);
  *  `rot("oh HEL-LO!", 1)` returns "PI IFM-MP!"
  */
 string rot(string line, int amount);
+/**
+ * Shifts a provided string by going character by character
+ * and rotating each one by an indicated amount
+ * @return Encrypted string
+ */
+string toCaesarCipher();
+/**
+ * Takes a string and separates into entries based on spaces
+ * @param str String provided by user
+ * @param words Vector of separate words
+ */
+void createWords(string str, vector<string>& words);
+/**
+ * Goes through dictionary vector, checking if there is an entry
+ * that matches the word being checked
+ * @param word Word being checked
+ * @param dictionary Vector containing the dictionary
+ * @return True if match, false otherwise
+ */
+bool searchDictionary(string& word, vector<string>& dictionary);
+/**
+ * Decrypts a passed in string by brute force method
+ * @param inputFile Dictionary
+ * @return Decrypted text
+ */
+string fromCaesarCipher(ifstream& inputFile);
+/**
+ * Encrypts an inputted string using a specified key
+ * @return Encrypted text
+ */
+string toVigenere();
+
 
 string toCaesarCipher(){
     cout << "Enter the text to encrypt:" << endl;
@@ -65,38 +97,23 @@ string toCaesarCipher(){
     return encryptedTxt;
 }
 
-void createWords(string& curWord, string str, vector<string>& words){
-    for(char& x : str){
-        if(isalpha(x)){
-            curWord += x;
-        } else if(!curWord.empty()){
-            for(char& x : curWord){
-                x = toupper(x);
-            }
-            words.push_back(curWord);
-            curWord.clear();
+void createWords(string str, vector<string>& words){
+    // creates substring until it runs into a space,
+    // then feeds the substring into the vector
+    for (int i = 0; i < str.size(); i++) {
+        if(str.at(i) == ' '){
+            words.push_back(str.substr(0, i));
+            str = str.substr(i + 1);
+            i = 0;
         }
     }
-
-    if(!curWord.empty()){
-        for(char& x : curWord){
-            x = toupper(x);
-        }
-        words.push_back(curWord);
-    }
-}
-
-string decryptText(string str, int amount){
-    for(char& x : str){
-        if(isalpha(x)){
-            x = toupper(x);
-            x = rot(x, -amount);
-        }
-    }
-    return str;
+    // feeds in last word because there are no more spaces
+    words.push_back(str);
 }
 
 bool searchDictionary(string& word, vector<string>& dictionary){
+    // goes through each word in the dictionary file until it
+    // runs into a word that matches the word being checked
     for(string& x : dictionary){
         if(x == word){
             return true;
@@ -108,7 +125,10 @@ bool searchDictionary(string& word, vector<string>& dictionary){
 string fromCaesarCipher(ifstream& inputFile){
     vector<string> dictionary;
     string entry;
-    while(inputFile >> entry){
+
+    // feeds each line as an entry into the dictionary vector
+    while(!inputFile.eof()){
+        getline(inputFile,entry);
         dictionary.push_back(entry);
     }
 
@@ -116,37 +136,72 @@ string fromCaesarCipher(ifstream& inputFile){
     string str;
     getline(cin,str);
 
-    vector<string> words;
-    string curWord;
+    string holdStr = str;
 
-    bool correctDec = false;
-    for(int shift = 0; shift < 26; shift++){
-        int correctWords = 0;
-
-        string result = decryptText(str,shift);
-
-        for()
-
-            if(correctWords > words.size()/2){
-                for(string x : words){
-                    correctDec = true;
-                }
-            } else{
-                result = "No good decryptions found";
-            }
+    // cleans up the inputted string, changing lowercase to uppercase,
+    // and removes spaces and other characters
+    for(int i = 0; i< str.size(); i++){
+        if(!isalpha(str.at(i)) && str.at(i) != ' '){
+            str.erase(str.begin()+i);
+            i--;
+        }
+        if(islower(str.at(i))){
+            str.at(i) = toupper(str.at(i));
+        }
+        while(i > 0 && str.at(i) == ' ' && str.at(i-1) == ' '){
+            str.erase(str.begin()+i);
+            i--;
+        }
     }
 
+    vector<string> words;
 
+    createWords(str,words);
 
+    string result;
 
+    if(words.size() == 1){ // if the input is 1 word long
+        string temp;
+        for(int i = 26; i > 0; i--){
+            temp = rot(words.at(0), 26 - i);
+            if(searchDictionary(temp,dictionary)){
+                result += temp + "\n";
 
-    createWords(curWord,str,words);
+            }
+        }
+    } else{ // if the input is more than 1 word long
+        for(int shift = 26; shift > 0; shift--){
+            string temp;
+            double correctWords = 0;
 
+            // goes through vector of words, decrypting the word and
+            // checking it against the dictionary
+            for (string x : words){
+                temp = rot(x, 26-shift);
+                if(searchDictionary(temp, dictionary)){
+                    correctWords++;
+                }
+            }
 
+            // checks if more than half the words in the vector appear
+            // in the dictionary
+            if(correctWords/words.size() > 0.5){
+                int k = 0;
+                for(char & x : holdStr){
+                    if(x != ' '){
+                        x = rot(x, 26 - shift);
+                    }
+                    k++;
+                }
+                result = holdStr;
+            }
+        }
+    }
+    if(result == ""){
+        result = "No good decryptions found";
+    }
     return result;
 }
-
-
 
 string toVigenere(){
     cout << "Enter text to encrypt:" << endl;
@@ -157,6 +212,7 @@ string toVigenere(){
     string key;
     getline(cin,key);
 
+    // key to uppercase
     string fixedKey;
     for(char& x : key){
         if(isalpha(x)){
@@ -175,7 +231,6 @@ string toVigenere(){
             }
 
             x = rot(x, findIndexInAlphabet(fixedKey[k]));
-
             k++;
         }
     }
@@ -192,14 +247,11 @@ int main() {
     do {
         ifstream inputFile("dictionary.txt");
         printMenu();
-        cout << endl
-             << "Enter a command (case does not matter): ";
+        cout << endl << "Enter a command (case does not matter): ";
 
-        // Use getline for all user input to avoid needing to handle
-        // input buffer issues relating to using both >> and getline
         getline(cin, command);
         cout << endl;
-        // TODO_STUDENT: Execute non-exit commands.
+
         if(command == "C" || command == "c"){
             string result;
             result = toCaesarCipher();
@@ -244,9 +296,14 @@ int findIndexInAlphabet(char c) {
 }
 
 char rot(char c, int amount) {
-    int shiftChar = findIndexInAlphabet(c);
-    shiftChar = (shiftChar + amount) % 26;
-    c = ALPHABET[shiftChar];
+    c = toupper(c);
+    int shiftChar;
+    if(isalpha(c)){
+        shiftChar = findIndexInAlphabet(c);
+        shiftChar = (shiftChar + amount) % 26;
+        c = ALPHABET[shiftChar];
+    }
+
     return c;
 }
 
